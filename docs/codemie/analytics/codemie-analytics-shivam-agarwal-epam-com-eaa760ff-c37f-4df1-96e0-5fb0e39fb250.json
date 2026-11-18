@@ -1,0 +1,356 @@
+{
+  "meta": {
+    "generatedAt": "2026-11-07T15:06:02.457Z",
+    "rangeLabel": "all",
+    "agents": [
+      "claude"
+    ],
+    "projectFilter": "all",
+    "totals": {
+      "sessions": 1,
+      "durationMs": 8867338,
+      "turns": 17,
+      "files": 4,
+      "netLines": 64,
+      "toolCallsTotal": 14,
+      "toolSuccessRate": 92.9,
+      "totalCostUSD": 1.03290938,
+      "cacheReadCostUSD": 0.15293058000000004,
+      "pricedSessions": 1
+    },
+    "unpricedModels": [],
+    "estimatedModels": [],
+    "localModels": [],
+    "coverage": [
+      {
+        "agentName": "claude",
+        "total": 1,
+        "priced": 1,
+        "withLog": 1
+      }
+    ],
+    "userEmail": "shivam_agarwal@epam.com",
+    "periodStart": "2026-11-04T05:52:34.684Z",
+    "periodEnd": "2026-11-04T08:20:22.022Z"
+  },
+  "sessions": [
+    {
+      "sessionId": "eaa760ff-c37f-4df1-96e0-5fb0e39fb250",
+      "agentName": "claude",
+      "provider": "ai-run-sso",
+      "title": "if i want to mcp in this project what type of MCP's i can add and for what they can be used for?",
+      "project": "C:\\Users\\ShivamAgarwal\\Downloads\\react1\\weather\\weatherAgent",
+      "branch": "main",
+      "startTime": 1793771554684,
+      "durationMs": 8867338,
+      "turns": 17,
+      "fileOps": 4,
+      "linesAdded": 64,
+      "linesRemoved": 0,
+      "linesModified": 0,
+      "netLines": 64,
+      "filesChanged": 4,
+      "filesWritten": 2,
+      "filesEdited": 2,
+      "toolCallsTotal": 14,
+      "toolCallsSuccess": 13,
+      "toolCallsFailure": 1,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "languages": [
+        "typescript",
+        "markdown",
+        "json"
+      ],
+      "tools": [
+        {
+          "toolName": "Bash",
+          "totalCalls": 8,
+          "successCount": 7,
+          "failureCount": 1,
+          "successRate": 87.5
+        },
+        {
+          "toolName": "Read",
+          "totalCalls": 2,
+          "successCount": 2,
+          "failureCount": 0,
+          "successRate": 100
+        },
+        {
+          "toolName": "Edit",
+          "totalCalls": 2,
+          "successCount": 2,
+          "failureCount": 0,
+          "successRate": 100
+        },
+        {
+          "toolName": "Write",
+          "totalCalls": 2,
+          "successCount": 2,
+          "failureCount": 0,
+          "successRate": 100
+        }
+      ],
+      "tokens": {
+        "input": 42,
+        "output": 11920,
+        "cacheRead": 730849,
+        "cacheCreation": 77831,
+        "cacheCreation1h": 77831,
+        "total": 820642
+      },
+      "costUSD": 1.03290938,
+      "cacheReadCostUSD": 0.15293058000000004,
+      "perModelCost": [
+        {
+          "model": "claude-opus-5-5",
+          "tokens": {
+            "input": 26,
+            "output": 6779,
+            "cacheRead": 392810,
+            "cacheCreation": 67238,
+            "cacheCreation1h": 67238,
+            "total": 466853
+          },
+          "costUSD": 0.7521500000000001,
+          "unpriced": false
+        },
+        {
+          "model": "claude-opus-5-5",
+          "tokens": {
+            "input": 16,
+            "output": 5141,
+            "cacheRead": 338039,
+            "cacheCreation": 10593,
+            "cacheCreation1h": 10593,
+            "total": 353789
+          },
+          "costUSD": 0.28075938,
+          "unpriced": false
+        }
+      ],
+      "hadLog": true,
+      "agentSessionFile": "C:\\Users\\ShivamAgarwal\\.claude\\projects\\C--Users-ShivamAgarwal-Downloads-react1-weather-weatherAgent\\37bc49a0-63bf-4399-ba96-ef8e84a42ce9.jsonl",
+      "costSeries": [
+        {
+          "t": 1793771616395,
+          "cost": 0.279044,
+          "tokens": 34532
+        },
+        {
+          "t": 1793771624275,
+          "cost": 0.29661540000000003,
+          "tokens": 69977
+        },
+        {
+          "t": 1793771642955,
+          "cost": 0.3827355,
+          "tokens": 111732
+        },
+        {
+          "t": 1793773537146,
+          "cost": 0.4021901,
+          "tokens": 154074
+        },
+        {
+          "t": 1793773580132,
+          "cost": 0.4841309,
+          "tokens": 200038
+        },
+        {
+          "t": 1793774651475,
+          "cost": 0.4970153,
+          "tokens": 246195
+        },
+        {
+          "t": 1793774674068,
+          "cost": 0.5145101,
+          "tokens": 292897
+        },
+        {
+          "t": 1793774682106,
+          "cost": 0.5462606999999999,
+          "tokens": 340891
+        },
+        {
+          "t": 1793774694642,
+          "cost": 0.5778353199999999,
+          "tokens": 389601
+        },
+        {
+          "t": 1793774717910,
+          "cost": 0.6152353199999999,
+          "tokens": 440274
+        },
+        {
+          "t": 1793774751624,
+          "cost": 0.65387062,
+          "tokens": 492128
+        },
+        {
+          "t": 1793774962843,
+          "cost": 0.6706460599999999,
+          "tokens": 544232
+        },
+        {
+          "t": 1793774969153,
+          "cost": 0.7059648599999999,
+          "tokens": 598114
+        },
+        {
+          "t": 1793774984777,
+          "cost": 0.7408999799999999,
+          "tokens": 652925
+        },
+        {
+          "t": 1793780396983,
+          "cost": 0.9898667799999998,
+          "tokens": 708420
+        },
+        {
+          "t": 1793780406340,
+          "cost": 1.01117018,
+          "tokens": 764271
+        },
+        {
+          "t": 1793780422087,
+          "cost": 1.03290938,
+          "tokens": 820642
+        }
+      ],
+      "costSource": "native-estimate",
+      "costBasis": "standard-api-tokens",
+      "dispatchesComplete": true,
+      "rootOwnCostUSD": 1.0073858000000002,
+      "unlinkedCostUSD": 0,
+      "unlinkedAgentIds": [],
+      "rootOwnTokens": {
+        "input": 42,
+        "output": 11920,
+        "cacheRead": 730849,
+        "cacheCreation": 77831,
+        "cacheCreation1h": 77831,
+        "total": 820642
+      },
+      "unlinkedTokens": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheCreation": 0,
+        "cacheCreation1h": 0,
+        "total": 0
+      },
+      "modelTimeline": [
+        {
+          "t": 1793771616395,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.279044,
+          "tokens": 34532
+        },
+        {
+          "t": 1793771624275,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0175714,
+          "tokens": 35445
+        },
+        {
+          "t": 1793771642955,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0861201,
+          "tokens": 41755
+        },
+        {
+          "t": 1793773537146,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0194546,
+          "tokens": 42342
+        },
+        {
+          "t": 1793773580132,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0819408,
+          "tokens": 45964
+        },
+        {
+          "t": 1793774651475,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0128844,
+          "tokens": 46157
+        },
+        {
+          "t": 1793774674068,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0174948,
+          "tokens": 46702
+        },
+        {
+          "t": 1793774682106,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0317506,
+          "tokens": 47994
+        },
+        {
+          "t": 1793774694642,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.03157462,
+          "tokens": 48710
+        },
+        {
+          "t": 1793774717910,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0374,
+          "tokens": 50673
+        },
+        {
+          "t": 1793774751624,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0386353,
+          "tokens": 51854
+        },
+        {
+          "t": 1793774962843,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.01677544,
+          "tokens": 52104
+        },
+        {
+          "t": 1793774969153,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0353188,
+          "tokens": 53882
+        },
+        {
+          "t": 1793774984777,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.03493512,
+          "tokens": 54811
+        },
+        {
+          "t": 1793780396983,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.2489668,
+          "tokens": 55495
+        },
+        {
+          "t": 1793780406340,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0213034,
+          "tokens": 55851
+        },
+        {
+          "t": 1793780422087,
+          "model": "claude-opus-5-5",
+          "costUSD": 0.0217392,
+          "tokens": 56371
+        }
+      ],
+      "routedTurnsPct": 0,
+      "skillInvocations": [],
+      "agentInvocations": [],
+      "commandInvocations": [],
+      "sessionSource": "Pure chat"
+    }
+  ]
+}
