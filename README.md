@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Weather MCP Server
 
-The weather tools (`get_current_weather`, `get_forecast`) are also exposed as an [MCP](https://modelcontextprotocol.io) server over stdio, so any MCP client can use them. It uses the free Open-Meteo API, so no API key is needed.
+The weather tools (`get_current_weather`, `get_forecast`, `get_hourly_forecast`, `get_air_quality`) are also exposed as an [MCP](https://modelcontextprotocol.io) server over stdio, so any MCP client can use them. It uses the free Open-Meteo API, so no API key is needed.
 
 Run it standalone with `npm run mcp`.
 

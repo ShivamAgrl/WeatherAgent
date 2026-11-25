@@ -3,6 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 // Open-Meteo: free, no API key required.
 const GEOCODE_URL = "https://geocoding-api.open-meteo.com/v1/search";
 const FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
+const AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality";
 
 type Units = "metric" | "imperial";
 
@@ -35,6 +36,37 @@ export const tools: Anthropic.Tool[] = [
                 units: { type: "string", enum: ["metric", "imperial"] },
             },
             required: ["city", "days", "units"],
+            additionalProperties: false,
+        },
+    },
+    {
+        name: "get_hourly_forecast",
+        description:
+            "Get an hour-by-hour forecast for a city starting from the current hour: condition, temperature, feels-like, precipitation chance and amount, wind, UV index, and daylight. Use it to find the best time window for an activity.",
+        strict: true,
+        input_schema: {
+            type: "object",
+            properties: {
+                city: { type: "string", description: "City name, optionally with country" },
+                hours: { type: "integer", description: "Number of hours to forecast from now, 1 to 72" },
+                units: { type: "string", enum: ["metric", "imperial"] },
+            },
+            required: ["city", "hours", "units"],
+            additionalProperties: false,
+        },
+    },
+    {
+        name: "get_air_quality",
+        description:
+            "Get current air quality for a city (US AQI with category, PM2.5, PM10, ozone, NO2, UV index, and pollen where available) plus an hourly AQI/PM2.5 forecast. Use it for health or outdoor-safety questions.",
+        strict: true,
+        input_schema: {
+            type: "object",
+            properties: {
+                city: { type: "string", description: "City name, optionally with country" },
+                hours: { type: "integer", description: "Hours of AQI forecast to include from now, 0 to 120 (0 = current conditions only)" },
+            },
+            required: ["city", "hours"],
             additionalProperties: false,
         },
     },
@@ -142,6 +174,87 @@ async function getForecast(city: string, days: number, units: Units) {
     };
 }
 
+async function getHourlyForecast(city: string, hours: number, units: Units) {
+    const loc = await geocode(city);
+    const data = await getJson(FORECAST_URL, {
+        latitude: loc.latitude,
+        longitude: loc.longitude,
+        hourly: "weather_code,temperature_2m,apparent_temperature,precipitation_probability,precipitation,wind_speed_10m,uv_index,is_day",
+        forecast_hours: hours,
+        timezone: "auto",
+        ...unitParams(units),
+    });
+    const h = data.hourly;
+    const u = data.hourly_units;
+    return {
+        location: loc.name,
+        timezone: data.timezone,
+        hours: h.time.map((time: string, i: number) => ({
+            time,
+            condition: describe(h.weather_code[i]),
+            is_day: h.is_day[i] === 1,
+            temperature: `${h.temperature_2m[i]}${u.temperature_2m}`,
+            feels_like: `${h.apparent_temperature[i]}${u.apparent_temperature}`,
+            precipitation_chance: `${h.precipitation_probability[i] ?? "n/a"}${u.precipitation_probability}`,
+            precipitation: `${h.precipitation[i]} ${u.precipitation}`,
+            wind: `${h.wind_speed_10m[i]} ${u.wind_speed_10m}`,
+            uv_index: h.uv_index[i],
+        })),
+    };
+}
+
+// US EPA AQI bands, computed here so the model never has to guess the category.
+function aqiCategory(aqi: number | null): string {
+    if (aqi == null) return "Unknown";
+    if (aqi <= 50) return "Good";
+    if (aqi <= 100) return "Moderate";
+    if (aqi <= 150) return "Unhealthy for Sensitive Groups";
+    if (aqi <= 200) return "Unhealthy";
+    if (aqi <= 300) return "Very Unhealthy";
+    return "Hazardous";
+}
+
+const POLLEN_FIELDS = ["alder_pollen", "birch_pollen", "grass_pollen", "mugwort_pollen", "olive_pollen", "ragweed_pollen"];
+
+async function getAirQuality(city: string, hours: number) {
+    const loc = await geocode(city);
+    const data = await getJson(AIR_QUALITY_URL, {
+        latitude: loc.latitude,
+        longitude: loc.longitude,
+        current: ["us_aqi", "pm2_5", "pm10", "ozone", "nitrogen_dioxide", "uv_index", ...POLLEN_FIELDS].join(","),
+        ...(hours > 0 && { hourly: "us_aqi,pm2_5", forecast_hours: hours }),
+        timezone: "auto",
+    });
+    const c = data.current;
+    const u = data.current_units;
+    // Pollen is only modelled for Europe; elsewhere the API returns nulls.
+    const pollen = Object.fromEntries(
+        POLLEN_FIELDS.filter((f) => c[f] != null).map((f) => [f.replace("_pollen", ""), `${c[f]} ${u[f]}`]),
+    );
+    const h = data.hourly;
+    return {
+        location: loc.name,
+        local_time: c.time,
+        timezone: data.timezone,
+        us_aqi: c.us_aqi,
+        aqi_category: aqiCategory(c.us_aqi),
+        pm2_5: `${c.pm2_5} ${u.pm2_5}`,
+        pm10: `${c.pm10} ${u.pm10}`,
+        ozone: `${c.ozone} ${u.ozone}`,
+        nitrogen_dioxide: `${c.nitrogen_dioxide} ${u.nitrogen_dioxide}`,
+        uv_index: c.uv_index,
+        pollen: Object.keys(pollen).length > 0 ? pollen : "Not available for this region (pollen data covers Europe only)",
+        ...(h && {
+            forecast: h.time.map((time: string, i: number) => ({
+                time,
+                us_aqi: h.us_aqi[i],
+                aqi_category: aqiCategory(h.us_aqi[i]),
+                pm2_5: `${h.pm2_5[i]} ${data.hourly_units.pm2_5}`,
+            })),
+        }),
+    };
+}
+
 // Input validation: never trust tool input blindly, even with strict schemas.
 function requireCity(input: any): string {
     const city = typeof input?.city === "string" ? input.city.trim() : "";
@@ -164,6 +277,14 @@ function requireDays(input: any): number {
     return days;
 }
 
+function requireHours(input: any, min: number, max: number): number {
+    const hours = Number(input?.hours);
+    if (!Number.isInteger(hours) || hours < min || hours > max) {
+        throw new Error(`Field 'hours' must be an integer between ${min} and ${max}.`);
+    }
+    return hours;
+}
+
 /** Runs a tool and returns its JSON-serialized result. Throws on failure; the caller reports it as is_error. */
 export async function runTool(name: string, input: unknown): Promise<string> {
     switch (name) {
@@ -171,6 +292,10 @@ export async function runTool(name: string, input: unknown): Promise<string> {
             return JSON.stringify(await getCurrentWeather(requireCity(input), requireUnits(input)));
         case "get_forecast":
             return JSON.stringify(await getForecast(requireCity(input), requireDays(input), requireUnits(input)));
+        case "get_hourly_forecast":
+            return JSON.stringify(await getHourlyForecast(requireCity(input), requireHours(input, 1, 72), requireUnits(input)));
+        case "get_air_quality":
+            return JSON.stringify(await getAirQuality(requireCity(input), requireHours(input, 0, 120)));
         default:
             throw new Error(`Unknown tool: ${name}`);
     }

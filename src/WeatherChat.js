@@ -4,7 +4,8 @@ import './WeatherChat.css';
 const SUGGESTIONS = [
   "What's the weather in Delhi right now?",
   'Will it rain in London this weekend?',
-  'Compare Mumbai and Bangalore today',
+  'Best 2-hour window for a run in Delhi tomorrow?',
+  'Is the air safe for kids outside in Delhi today?',
 ];
 
 function newSessionId() {
