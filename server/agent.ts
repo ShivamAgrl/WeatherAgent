@@ -46,6 +46,9 @@ export function resetSession(sessionId: string) {
     sessions.delete(sessionId);
 }
 
+// Read-only access to a session's history (used by evals to inspect tool calls and results).
+export const getSessionHistory = (sessionId: string) => sessions.get(sessionId);
+
 async function executeToolCall(block: Anthropic.ToolUseBlock): Promise<Anthropic.ToolResultBlockParam> {
     try {
         const content = await runTool(block.name, block.input);
